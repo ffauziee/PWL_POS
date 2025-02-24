@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('m_level', function (Blueprint $table) {
-            $table->id('level_id');// membuat kolom yang primary key yang auto increment
-            $table->string('level_kode', 10)->unique();
-            $table->string('level_nama', 100);
+        Schema::create('m_supplier', function (Blueprint $table) {
+            $table->id('supplier_id');
+            $table->string('supplier_kode')->unique();
+            $table->string('supplier_name');
+            $table->string('supplier_alamat');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('m_level');
+        Schema::dropIfExists('m_supplier');
     }
 };
