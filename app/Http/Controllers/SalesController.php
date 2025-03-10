@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 
 class SalesController extends Controller
 {
-    public function index()
+    public function sales()
     {
-        return view('sales', ['sales' => ['Transaction #001', 'Transaction #002', 'Transaction #003']]);
+        return view('sales');
     }
 }
