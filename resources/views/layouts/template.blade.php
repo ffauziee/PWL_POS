@@ -8,9 +8,14 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'PWL Laravel Starter Code') }}</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminlte/docs/assets/plugins/fontawesome-free/css/fontawesome.min.css') }}">
-
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet"
         href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
@@ -21,28 +26,38 @@
 </head>
 
 <body class="hold-transition sidebar-mini">
+    <!--site wrapper-->
     <div class="wrapper">
-
+        <!--navbar-->
         @include('layouts.header')
+        <!--/.navbar-->
 
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="../../index3.html" class="brand-link">
+            <a href="{{url('/')}}" class="brand-link">
                 <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">AdminLTE 3</span>
+                <span class="brand-text font-weight-light">PWL - Starter Code 3</span>
             </a>
+
+            <!--sidebar-->
             @include('layouts.sidebar')
+            <!--!.sidebar-->
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
+            <!--content header (page header)-->
             @include('layouts.breadcrumb')
+
+            <!--main content-->
             <section class="content">
                 @yield('content')
             </section>
+            <!--/.content-->
         </div>
+        <!--/.content wrapper-->
 
 
         @include('layouts.footer')
@@ -56,7 +71,7 @@
     <!-- jQuery -->
     <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
     <!-- Bootstrap 4 -->
-    <script src="{{ asset('adminlte/docs/assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
 
