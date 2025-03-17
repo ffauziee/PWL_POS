@@ -6,38 +6,24 @@
             <div class="card-tools"></div>
         </div>
         <div class="card-body">
-            @empty($user)
+            @empty($supplier)
                 <div class="alert alert-danger alert-dismissible">
                     <h5><i class="icon fas fa-ban"></i> Kesalahan!</h5>
                     Data yang Anda cari tidak ditemukan.
                 </div>
                 <a href="{{ url('user') }}" class="btn btn-sm btn-default mt-2">Kembali</a>
             @else
-                <form method="POST" action="{{ url('/user/' . $user->user_id) }}" class="formhorizontal">
+                <form method="POST" action="{{ url('/supplier/' . $supplier->supplier_id) }}" class="formhorizontal">
                     @csrf
                     {!! method_field('PUT') !!} <!-- tambahkan baris ini untuk proses edit yang butuh
-                method PUT -->
+                                                                                                                method PUT -->
+
                     <div class="form-group row">
-                        <label class="col-1 control-label col-form-label">Level</label>
+                        <label class="col-1 control-label col-form-label">Supplier Kode</label>
                         <div class="col-11">
-                            <select class="form-control" id="level_id" name="level_id" required>
-                                <option value="">- Pilih Level -</option>
-                                @foreach ($level as $item)
-                                    <option value="{{ $item->level_id }}" @if ($item->level_id == $user->level_id) selected @endif>
-                                        {{ $item->level_nama }}</option>
-                                @endforeach
-                            </select>
-                            @error('level_id')
-                                <small class="form-text text-danger">{{ $message }}</small>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-1 control-label col-form-label">Username</label>
-                        <div class="col-11">
-                            <input type="text" class="form-control" id="username" name="username"
-                                value="{{ old('username', $user->username) }}" required>
-                            @error('username')
+                            <input type="text" class="form-control" id="supplier_kode" name="supplier_kode"
+                                value="{{ old('username', $supplier->supplier_kode) }}" required>
+                            @error('supplier_kode')
                                 <small class="form-text text-danger">{{ $message }}</small>
                             @enderror
                         </div>
@@ -45,22 +31,19 @@
                     <div class="form-group row">
                         <label class="col-1 control-label col-form-label">Nama</label>
                         <div class="col-11">
-                            <input type="text" class="form-control" id="nama" name="nama"
-                                value="{{ old('nama', $user->nama) }}" required>
-                            @error('nama')
+                            <input type="text" class="form-control" id="supplier_nama" name="supplier_nama"
+                                value="{{ old('nama', $supplier->supplier_nama) }}" required>
+                            @error('supplier_nama')
                                 <small class="form-text text-danger">{{ $message }}</small>
                             @enderror
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-1 control-label col-form-label">Password</label>
+                        <label class="col-1 control-label col-form-label">Alamat</label>
                         <div class="col-11">
-                            <input type="password" class="form-control" id="password" name="password">
-                            @error('password')
+                            <textarea type="text" class="form-control" id="supplier_alamat" name="supplier_alamat" value="" required>{{ old('supplier_alamat', $supplier->supplier_alamat) }}</textarea>
+                            @error('supplier_alamat')
                                 <small class="form-text text-danger">{{ $message }}</small>
-                            @else
-                                <small class="form-text text-muted">Abaikan (jangan diisi) jika tidak ingin
-                                    mengganti password user.</small>
                             @enderror
                         </div>
                     </div>

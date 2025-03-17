@@ -2,141 +2,143 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LevelModel;
+use App\Models\SupplierModel;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
-class LevelController extends Controller
+class SupplierController extends Controller
 {
+
     public function index()
     {
 
         $breadcrumb = (object) [
-            'title' => 'Daftar Level',
-            'list' => ['Home', 'Level']
+            'title' => 'Daftar Supplier',
+            'list' => ['Home', 'Supplier']
         ];
 
         $page = (object) [
-            'title' => 'Daftar level yang terdaftar dalam sistem',
+            'title' => 'Daftar supplier yang terdaftar dalam sistem',
         ];
 
-        $activeMenu = 'level';
+        $activeMenu = 'supplier';
 
-        $level = LevelModel::all();
+        $supplier = SupplierModel::all();
 
-        return view('level.index', compact('breadcrumb', 'page', 'activeMenu', 'level'));
+        return view('supplier.index', compact('breadcrumb', 'page', 'activeMenu', 'supplier'));
     }
 
-    // Ambil data level dalam bentuk json untuk datatables
+    // Ambil data user dalam bentuk json untuk datatables
     public function list(Request $request)
     {
-        $level = LevelModel::select('level_id', 'level_kode', 'level_nama', 'created_at');
+        $supplier = SupplierModel::select('supplier_id', 'supplier_kode', 'supplier_nama', 'supplier_alamat', 'created_at');
 
 
-        return DataTables::of($level)
+        return DataTables::of($supplier)
             // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex)
             ->addIndexColumn()
-            ->addColumn('aksi', function ($level) { // menambahkan kolom aksi
-                $btn = '<button onclick="modalAction(\'' . url('/level/' . $level->level_id .
+            ->addColumn('aksi', function ($supplier) { // menambahkan kolom aksi
+                $btn = '<button onclick="modalAction(\'' . url('/supplier/' . $supplier->supplier_id .
                     '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/level/' . $level->level_id .
+                $btn .= '<button onclick="modalAction(\'' . url('/supplier/' . $supplier->supplier_id .
                     '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
-                $btn .= '<bsutton onclick="modalAction(\'' . url('/level/' . $level->level_id .
+                $btn .= '<bsutton onclick="modalAction(\'' . url('/supplier/' . $supplier->supplier_id .
                     '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
-
                 return $btn;
             })
             ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html
             ->make(true);
     }
 
-    // Menampilkan halaman form tambah level
+    // Menampilkan halaman form tambah user
     public function create()
     {
         $breadcrumb = (object) [
-            'title' => 'Tambah Level',
-            'list' => ['Home', 'Level', 'Tambah']
+            'title' => 'Tambah Supplier',
+            'list' => ['Home', 'Supplier', 'Tambah']
         ];
 
         $page = (object) [
-            'title' => 'Tambah level baru'
+            'title' => 'Tambah user baru'
         ];
 
-        $activeMenu = 'level'; // set menu yang sedang aktif
+        $activeMenu = 'supplier'; // set menu yang sedang aktif
 
-        return view('level.create', [
+        return view('supplier.create', [
             'breadcrumb' => $breadcrumb,
             'page' => $page,
             'activeMenu' => $activeMenu
         ]);
     }
 
-    // Menyimpan data level baru
+    // Menyimpan data user baru
     public function store(Request $request)
     {
         $request->validate([
-            // levelname harus diisi, berupa string, minimal 3 karakter, dan bernilai unik di tabel m_level kolom levelname
-            'level_kode' => 'required|string|min:3|unique:m_level,level_kode',
-            'level_nama' => 'required|string|max:100', // nama harus diisi, berupa string, dan maksimal 100 karakter
+            'supplier_kode' => 'required|string|min:3|unique:m_supplier,supplier_kode',
+            'supplier_nama' => 'required|string|max:100',
+            'supplier_alamat' => 'required|string|max:255',
         ]);
 
-        LevelModel::create([
-            'level_kode' => $request->level_kode,
-            'level_nama' => $request->level_nama,
+        // dd($request->all());
+
+        SupplierModel::create([
+            'supplier_kode' => $request->supplier_kode,
+            'supplier_nama' => $request->supplier_nama,
+            'supplier_alamat' => $request->supplier_alamat,
         ]);
 
-        return redirect('/level')->with('success', 'Data level berhasil disimpan');
+        return redirect('/supplier')->with('success', 'Data supplier berhasil disimpan');
     }
 
 
     public function show(string $id)
     {
-        $level = LevelModel::find($id);
+        $supplier = SupplierModel::find($id);
 
 
-        // dd($level);
+        // dd($supplier);
 
         $breadcrumb = (object) [
-            'title' => 'Detail Level',
-            'list' => ['Home', 'Level', 'Detail']
+            'title' => 'Detail Supplier',
+            'list' => ['Home', 'Supplier', 'Detail']
         ];
 
         $page = (object) [
-            'title' => 'Detail level'
+            'title' => 'Detail supplier'
         ];
 
-        $activeMenu = 'level';
+        $activeMenu = 'supplier';
 
-        return view('level.show', [
+        return view('supplier.show', [
             'breadcrumb' => $breadcrumb,
             'page' => $page,
-            'level' => $level,
+            'supplier' => $supplier,
             'activeMenu' => $activeMenu
         ]);
     }
 
     public function edit(string $id)
     {
-        $level = LevelModel::find($id);
+        $supplier = SupplierModel::find($id);
 
         $breadcrumb = (object) [
-            'title' => 'Edit Level',
-            'list' => ['Home', 'Level', 'Edit']
+            'title' => 'Edit Supplier',
+            'list' => ['Home', 'Supplier', 'Edit']
         ];
 
         $page = (object) [
-            'title' => 'Edit level'
+            'title' => 'Edit supplier'
         ];
 
-        $activeMenu = 'level';
+        $activeMenu = 'user';
 
-        return view('level.edit', [
+        return view('supplier.edit', [
             'breadcrumb' => $breadcrumb,
             'page' => $page,
-            'level' => $level,
+            'supplier' => $supplier,
             'activeMenu' => $activeMenu
         ]);
     }
@@ -144,49 +146,52 @@ class LevelController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'level_kode' => 'required|string|min:3|unique:m_level,level_kode,' . $id . ',level_id',
-            'level_nama' => 'required|string|max:100',
+            'supplier_kode' => 'required|string|min:3|unique:m_supplier,supplier_kode,' . $id . ',supplier_id',
+            'supplier_nama' => 'required|string|max:100',
+            'supplier_alamat' => 'required|string|max:255'
         ]);
 
         // dd($request->all());
 
-        $level = LevelModel::find($id)->update([
-            'level_kode' => $request->level_kode,
-            'level_nama' => $request->level_nama,
+        $supplier = SupplierModel::find($id)->update([
+            'supplier_kode' => $request->supplier_kode,
+            'supplier_nama' => $request->supplier_nama,
+            'supplier_alamat' => $request->supplier_alamat
 
         ]);
 
-        return redirect('/level')->with('success', 'Data level berhasil diubah');
+        return redirect('/supplier')->with('success', 'Data supplier berhasil diubah');
     }
 
 
     public function destroy(string $id)
     {
 
-        $check = LevelModel::find($id);
+        $check = SupplierModel::find($id);
         if (!$check) {
-            return redirect('/level')->with('error', 'Data level tidak ditemukan');
+            return redirect('/supplier')->with('error', 'Data supplier tidak ditemukan');
         }
 
         try {
-            LevelModel::destroy($id);
-            return redirect('/level')->with('success', 'Data level berhasil dihapus');
+            SupplierModel::destroy($id);
+            return redirect('/supplier')->with('success', 'Data supplier berhasil dihapus');
         } catch (QueryException $e) {
-            return redirect('/level')->with('error', 'Data level gagal dihapus');
+            return redirect('/supplier')->with('error', 'Data supplier gagal dihapus');
         }
     }
 
     public function create_ajax()
     {
-        return view('level.create_ajax',);
+        return view('supplier.create_ajax',);
     }
 
     public function store_ajax(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'level_kode' => 'required|string|min:3|unique:m_level,level_kode',
-                'level_nama' => 'required|string|min:3',
+                'supplier_kode' => 'required|string|min:3|unique:m_supplier,supplier_kode',
+                'supplier_nama' => 'required|string|min:3',
+                'supplier_alamat' => 'required|string|min:5'
 
             ];
 
@@ -200,21 +205,21 @@ class LevelController extends Controller
                 ]);
             }
 
-            LevelModel::create($request->all());
+            SupplierModel::create($request->all());
 
             return response()->json([
                 'status' => true,
-                'message' => 'Data level berhasil disimpan'
+                'message' => 'Data supplier berhasil disimpan'
             ]);
         }
-        redirect('/level');
+        redirect('/supplier');
     }
 
     public function edit_ajax(string $id)
     {
-        $level = LevelModel::find($id);
-        return view('level.edit_ajax', [
-            'level' => $level,
+        $supplier = SupplierModel::find($id);
+        return view('supplier.edit_ajax', [
+            'supplier' => $supplier,
         ]);
     }
 
@@ -223,8 +228,9 @@ class LevelController extends Controller
         // cek apakah request dari ajax
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'level_kode' => 'required|string|min:3',
-                'level_nama' => 'required|string|min:3',
+                'supplier_kode' => 'required|string|min:3',
+                'supplier_nama' => 'required|string|min:3',
+                'supplier_alamat' => 'required|string|min:3'
             ];
             // use Illuminate\Support\Facades\Validator;
             $validator = Validator::make($request->all(), $rules);
@@ -235,7 +241,7 @@ class LevelController extends Controller
                     'msgField' => $validator->errors() // menunjukkan field mana yang error
                 ]);
             }
-            $check = LevelModel::find($id);
+            $check = SupplierModel::find($id);
             if ($check) {
                 $check->update($request->all());
                 return response()->json([
@@ -260,20 +266,20 @@ class LevelController extends Controller
 
     public function confirm_ajax(string $id)
     {
-        $level = LevelModel::find($id);
+        $supplier = SupplierModel::find($id);
 
-        return view('level.confirm_ajax', [
-            'level' => $level
+        return view('supplier.confirm_ajax', [
+            'supplier' => $supplier
         ]);
     }
 
     public function delete_ajax(Request $request, $id)
     {
         if ($request->ajax() || $request->wantsJson()) {
-            $level = LevelModel::find($id);
+            $supplier = SupplierModel::find($id);
 
-            if ($level) {
-                $level->delete();
+            if ($supplier) {
+                $supplier->delete();
                 return response()->json([
                     'status' => true,
                     'message' => 'Data berhasil dihapus'
