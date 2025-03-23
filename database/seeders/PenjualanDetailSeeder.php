@@ -2,39 +2,43 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class PenjualanDetailSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
         $penjualanDetailData = [];
 
-        // Ambil semua penjualan_id dari tabel penjualan
+        // Ambil semua penjualan_id dari tabel m_penjualan
         $penjualanIds = DB::table('m_penjualan')->pluck('penjualan_id')->toArray();
 
         // Ambil semua barang_id dari tabel m_barang
         $barangIds = DB::table('m_barang')->pluck('barang_id')->toArray();
 
-        if (empty($penjualanIds) || empty($barangIds)) {
-            return; // Jika tidak ada data, hentikan seeder
-        }
+        $detailId = 1; // Mulai dari detail_id = 1
 
+        // Loop untuk setiap transaksi penjualan
         foreach ($penjualanIds as $penjualanId) {
-            // Pastikan barang yang dipilih tidak lebih banyak dari yang tersedia
-            $jumlahBarang = min(3, count($barangIds));
-            $selectedBarangIds = (array) array_rand(array_flip($barangIds), $jumlahBarang);
+            // Ambil 3 barang secara acak untuk setiap transaksi
+            $selectedBarangIds = array_rand(array_flip($barangIds), 3);
 
             foreach ($selectedBarangIds as $barangId) {
                 // Ambil harga jual dari tabel m_barang
                 $harga = DB::table('m_barang')->where('barang_id', $barangId)->value('harga_jual');
 
+                // Tambahkan data detail penjualan
                 $penjualanDetailData[] = [
+                    'detail_id' => $detailId++,
                     'penjualan_id' => $penjualanId,
                     'barang_id' => $barangId,
-                    'harga' => $harga ?? 0, // Default 0 jika harga tidak ditemukan
-                    'jumlah' => rand(1, 5),
+                    'harga' => $harga,
+                    'jumlah' => rand(1, 5), // Jumlah barang antara 1 sampai 5
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
