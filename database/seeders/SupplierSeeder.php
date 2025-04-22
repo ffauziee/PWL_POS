@@ -17,7 +17,7 @@ class SupplierSeeder extends Seeder
             [
                 'supplier_id' => 1,
                 'supplier_kode' => 'SUP001',
-                'supplier_name' => 'PT. Sumber Berkah',
+                'supplier_nama' => 'PT. Sumber Berkah',
                 'supplier_alamat' => 'Jl. Merdeka No. 123, Jakarta',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -25,7 +25,7 @@ class SupplierSeeder extends Seeder
             [
                 'supplier_id' => 2,
                 'supplier_kode' => 'SUP002',
-                'supplier_name' => 'CV. Makmur Sentosa',
+                'supplier_nama' => 'CV. Makmur Sentosa',
                 'supplier_alamat' => 'Jl. Sejahtera No. 45, Bandung',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -33,7 +33,7 @@ class SupplierSeeder extends Seeder
             [
                 'supplier_id' => 3,
                 'supplier_kode' => 'SUP003',
-                'supplier_name' => 'UD. Jaya Abadi',
+                'supplier_nama' => 'UD. Jaya Abadi',
                 'supplier_alamat' => 'Jl. Raya Sukamaju No. 78, Surabaya',
                 'created_at' => now(),
                 'updated_at' => now(),

@@ -4,7 +4,17 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
+                <a href="{{ url('/barang/export_pdf') }}" class="btn btn-sm btn-warning"><i class="fa fa-filepdf"></i> Export
+                    PDF</a>
+                <a href="{{ url('/barang/export_excel') }}" class="btn btn-sm btn-primary"><i class="fa fa-fileexcel"></i>
+                    Export
+                    Excel</a>
+                <button onclick="modalAction('{{ url('/barang/import') }}')" class="btn btn-sm btn-info">Import
+                    Barang</button>
                 <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/create') }}">Tambah</a>
+                <button type="button" onclick="modalAction('{{ url('barang/create_ajax') }}')"
+                    class="btn btn-sm btn-success mt-1">Tambah
+                    Ajax</button>
             </div>
         </div>
         <div class="card-body">
@@ -47,19 +57,32 @@
                         <th>Harga Jual</th>
                         <th>Harga Beli</th>
                         <th>Kategori</th>
+                        <th>Terjual</th>
+                        <th>Sisa</th>
+                        <th>Semua Stock</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
             </table>
         </div>
     </div>
+    <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" databackdrop="static"
+        data-keyboard="false" data-width="75%" aria-hidden="true"></div>
 @endsection
 @push('css')
 @endpush
 @push('js')
     <script>
+        function modalAction(url = '') {
+            $('#myModal').load(url, function() {
+                $('#myModal').modal('show');
+            });
+        }
+
+        let dataBarang;
+
         $(document).ready(function() {
-            var dataBarang = $('#table_barang').DataTable({
+            dataBarang = $('#table_barang').DataTable({
                 // serverSide: true, jika ingin menggunakan server side processing
                 serverSide: true,
                 ajax: {
@@ -107,7 +130,26 @@
                         className: "",
                         orderable: false,
                         searchable: false
-                    }, {
+                    },
+                    {
+                        data: "total_penjualan",
+                        className: "",
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: "stock_available",
+                        className: "",
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
+                        data: "total_stock",
+                        className: "",
+                        orderable: true,
+                        searchable: true
+                    },
+                    {
                         data: "aksi",
                         className: "",
                         orderable: false,
@@ -115,6 +157,18 @@
                     }
                 ]
             });
+
+            $('#table-barang_filter input').unbind().bind().on('keyup', function(e) {
+                if (e.keyCode == 13) { // enter key
+                    dataBarang.search(this.value).draw();
+                }
+            });
+
+            $('.filter_kategori').change(function() {
+                dataBarang.draw();
+            });
+
+
 
             $('#kategori_id').on('change', function() {
                 dataBarang.ajax.reload();
