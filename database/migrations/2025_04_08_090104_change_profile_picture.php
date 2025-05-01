@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('m_supplier', function (Blueprint $table) {
-            $table->id('supplier_id');
-            $table->string('supplier_kode')->unique();
-            $table->string('supplier_name');
-            $table->string('supplier_alamat');
-            $table->timestamps();
+        Schema::table('m_user', function (Blueprint $table) {
+            // create a new column 'profile_picture' with a default value of null
+            $table->string('profile_picture')->nullable()->after('password');
         });
     }
 
@@ -25,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('m_supplier');
+        //
     }
 };

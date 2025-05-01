@@ -4,7 +4,16 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
+                <a href="{{ url('/level/export_pdf') }}" class="btn btn-sm btn-warning"><i class="fa fa-filepdf"></i> Export
+                    PDF</a>
+                <a href="{{ url('/level/export_excel') }}" class="btn btn-sm btn-primary"><i class="fa fa-fileexcel"></i>
+                    Export
+                    Excell</a>
+                <button onclick="modalAction('{{ url('/level/import') }}')" class="btn btn-sm btn-info">Import Data Level</button>
                 <a class="btn btn-sm btn-primary mt-1" href="{{ url('level/create') }}">Tambah</a>
+                <button type="button" onclick="modalAction('{{ url('level/create_ajax') }}')"
+                    class="btn btn-sm btn-success mt-1">Tambah
+                    Ajax</button>
             </div>
         </div>
         <div class="card-body">
@@ -21,7 +30,7 @@
                 </div>
             @endif
 
-            <table class="table table-bordered table-striped table-hover table-sm" id="table_user">
+            <table class="table table-bordered table-striped table-hover table-sm" id="table_level">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -33,13 +42,23 @@
             </table>
         </div>
     </div>
+    <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" databackdrop="static"
+        data-keyboard="false" data-width="75%" aria-hidden="true"></div>
 @endsection
 @push('css')
 @endpush
 @push('js')
     <script>
+        function modalAction(url = '') {
+            $('#myModal').load(url, function() {
+                $('#myModal').modal('show');
+            });
+        }
+
+        let dataLevel;
+
         $(document).ready(function() {
-            var dataUser = $('#table_user').DataTable({
+            dataLevel = $('#table_level').DataTable({
                 // serverSide: true, jika ingin menggunakan server side processing
                 serverSide: true,
                 ajax: {

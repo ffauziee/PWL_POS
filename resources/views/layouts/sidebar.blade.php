@@ -33,7 +33,7 @@
             'title' => 'Data Supplier',
             'url' => '/supplier',
             'icon' => 'fas fa-user',
-            'menu' => 'level',
+            'menu' => 'supplier',
             'roles' => ['ADM', 'MNG'],
         ],
         [
@@ -112,27 +112,97 @@
                 @endif
             @endforeach
         </ul>
-        @auth
-            <button id="btn-logout" type="button" class="btn btn-danger btn-sm">Logout</button>
-        @endauth
     </nav>
+    
+    <!-- Logout Button Section (Outside of nav to fix centering) -->
+    @auth
+        <div class="logout-wrapper">
+            <button id="btn-logout" type="button" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    @endauth
 </div>
+
+@push('styles')
+<style>
+    /* Memastikan sidebar memiliki positioning relative */
+    .sidebar {
+        position: relative;
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* Container khusus untuk tombol logout */
+    .logout-wrapper {
+        width: 100%;
+        padding: 15px;
+        margin-top: auto;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    
+    /* Memastikan tombol logout berada tepat di tengah */
+    .btn-logout {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 80%;
+        padding: 10px 15px;
+        background: linear-gradient(45deg, #dc3545, #b02a37);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
+        margin: 0 auto; /* Untuk memastikan posisi center */
+    }
+    
+    .btn-logout:hover {
+        background: linear-gradient(45deg, #c82333, #a71d2a);
+        box-shadow: 0 4px 8px rgba(220, 53, 69, 0.5);
+        transform: translateY(-2px);
+    }
+    
+    .btn-logout:active {
+        transform: translateY(1px);
+        box-shadow: 0 1px 3px rgba(220, 53, 69, 0.4);
+    }
+    
+    .btn-logout i {
+        margin-right: 8px;
+        font-size: 16px;
+    }
+</style>
+@endpush
 
 @push('js')
     <script>
         $(document).ready(function() {
             $('#btn-logout').click(function() {
-                console.log('logout');
+                $(this).addClass('btn-clicked');
+                
 
                 $.ajax({
                     url: '{{ url('logout') }}',
                     type: 'GET',
                     success: function(response) {
                         console.log(response);
-                        window.location.href = '{{ url('login') }}';
+                        // Tambahkan efek transisi sebelum redirect
+                        $('body').fadeOut(300, function() {
+                            window.location.href = '{{ url('login') }}';
+                        });
                     },
                     error: function(xhr) {
                         console.log(xhr);
+                        // Hapus kelas animasi jika terjadi error
+                        $('#btn-logout').removeClass('btn-clicked');
                     }
                 });
             });
